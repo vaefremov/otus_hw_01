@@ -1,6 +1,13 @@
 cmake_minimum_required (VERSION 3.2)
 
-project(helloworld VERSION 0.0.42$ENV{TRAVIS_BUILD_NUMBER})
+if("$ENV{TRAVIS_BUILD_NUMBER}" STREQUAL "")
+  message("Warning: Could not find TRAVIS_BUILD_NUMBER environment variable")
+  set(VERSION_NUMBER "0.0.42")
+else()
+  set(VERSION_NUMBER "0.0.$ENV{TRAVIS_BUILD_NUMBER}")
+endif()
+
+project(helloworld VERSION ${VERSION_NUMBER})
 
 find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 
