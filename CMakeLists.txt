@@ -28,6 +28,21 @@ target_compile_options(helloworld_cli PRIVATE
     -Wall -Wextra -pedantic -Werror
 )
 
+add_executable(test_helloworld test_general_api.cpp general_api.cpp)
+target_include_directories(test_helloworld
+    PRIVATE "${CMAKE_BINARY_DIR}"
+)
+target_compile_options(test_helloworld PRIVATE
+    -Wall -Wextra -pedantic -Werror
+)
+target_link_libraries(test_helloworld
+    ${Boost_LIBRARIES}
+)
+set_target_properties(test_helloworld PROPERTIES
+    COMPILE_DEFINITIONS BOOST_TEST_DYN_LINK
+)
+
+
 
 install(TARGETS helloworld_cli RUNTIME DESTINATION bin)
 
@@ -40,3 +55,7 @@ set(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
 set(CPACK_PACKAGE_CONTACT example@example.com)
 
 include(CPack)
+
+enable_testing()
+
+add_test(test_api test_helloworld)
