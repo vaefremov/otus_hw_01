@@ -5,8 +5,8 @@ before_script:
 # - sudo apt-get update -qq
 - sudo apt install libgtest-dev
 - cd /usr/src/gtest/
-- sudo cmake .
-- sudo make
+- sudo /usr/bin/cmake .
+- sudo /usr/bin/make
 - sudo cp *.a /usr/lib/
 script:
 - cmake .
