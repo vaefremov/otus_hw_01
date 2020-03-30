@@ -5,10 +5,12 @@ before_script:
 # - sudo apt-get update -qq
 - sudo apt install libgtest-dev
 script:
-- cd /usr/src/gtest/
-- sudo /usr/bin/cmake .
-- sudo /usr/bin/make
-- sudo cp *.a /usr/lib/
+- mkdir gtest
+- cd gtest
+- cmake /usr/src/gtest/
+- cmake --build .
+- sudo cp libgtest*.a /usr/lib/- sudo cp *.a /usr/lib/
+- cd ..
 - cmake .
 - cmake --build .
 - cmake --build . --target test
