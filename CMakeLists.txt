@@ -10,6 +10,7 @@ endif()
 project(helloworld VERSION ${VERSION_NUMBER})
 
 find_package(Boost COMPONENTS unit_test_framework REQUIRED)
+find_package(GTest REQUIRED)
 
 configure_file(config.h.in config.h)
 
@@ -42,6 +43,19 @@ set_target_properties(test_helloworld PROPERTIES
     COMPILE_DEFINITIONS BOOST_TEST_DYN_LINK
 )
 
+add_executable(test_g_helloworld test_g_general_api.cpp general_api.cpp)
+target_include_directories(test_g_helloworld
+    PRIVATE "${CMAKE_BINARY_DIR}"
+)
+target_compile_options(test_g_helloworld PRIVATE
+    -Wall -Wextra -pedantic -Werror
+)
+message(${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
+target_link_libraries(test_g_helloworld
+    ${GTEST_LIBRARIES}
+    ${GTEST_MAIN_LIBRARIES}
+    pthread
+)
 
 
 install(TARGETS helloworld_cli RUNTIME DESTINATION bin)
@@ -59,3 +73,4 @@ include(CPack)
 enable_testing()
 
 add_test(test_api test_helloworld)
+add_test(test_g_api test_g_helloworld)
