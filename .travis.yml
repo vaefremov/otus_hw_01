@@ -9,7 +9,7 @@ script:
 - cd gtest
 - cmake /usr/src/gtest/
 - cmake --build .
-- sudo cp libgtest*.a /usr/lib/- sudo cp *.a /usr/lib/
+- sudo cp *.a /usr/lib/
 - cd ..
 - cmake .
 - cmake --build .
