@@ -50,7 +50,10 @@ target_include_directories(test_g_helloworld
 target_compile_options(test_g_helloworld PRIVATE
     -Wall -Wextra -pedantic -Werror
 )
-message(${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
+set_target_properties (helloworld_cli  PROPERTIES
+  CXX_STANDARD 14
+  CXX_STANDARD_REQUIRED ON
+)
 target_link_libraries(test_g_helloworld
     ${GTEST_LIBRARIES}
     ${GTEST_MAIN_LIBRARIES}
