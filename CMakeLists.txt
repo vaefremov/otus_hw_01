@@ -11,6 +11,7 @@ project(helloworld VERSION ${VERSION_NUMBER})
 
 find_package(Boost COMPONENTS unit_test_framework)
 find_package(GTest REQUIRED)
+find_package(Threads)
 
 configure_file(config.h.in config.h)
 
@@ -44,7 +45,7 @@ target_include_directories(test_g_helloworld
 target_link_libraries(test_g_helloworld
     ${GTEST_LIBRARIES}
     ${GTEST_MAIN_LIBRARIES}
-    pthread
+    ${CMAKE_THREAD_LIBS_INIT}
 )
 
 if (MSVC)
