@@ -9,41 +9,44 @@ endif()
 
 project(helloworld VERSION ${VERSION_NUMBER})
 
-find_package(Boost COMPONENTS unit_test_framework REQUIRED)
+find_package(Boost COMPONENTS unit_test_framework)
 find_package(GTest REQUIRED)
 
 configure_file(config.h.in config.h)
-
-set(CXX_STANDARD 14)
-set(CXX_STANDARD_REQUIRED ON)
 
 add_executable(helloworld_cli main.cpp general_api.cpp)
 target_include_directories(helloworld_cli
     PRIVATE "${CMAKE_BINARY_DIR}"
 )
 
-add_executable(test_helloworld tests/test_general_api.cpp general_api.cpp)
-target_include_directories(test_helloworld
-    PRIVATE "${CMAKE_BINARY_DIR}" "${CMAKE_HOME_DIRECTORY}"
-)
-target_link_libraries(test_helloworld
-    ${Boost_LIBRARIES}
-)
-set_target_properties(test_helloworld PROPERTIES
-    COMPILE_DEFINITIONS BOOST_TEST_DYN_LINK
-)
+if (Boost_FOUND)
+    add_executable(test_helloworld tests/test_general_api.cpp general_api.cpp)
+    target_include_directories(test_helloworld
+        PRIVATE "${CMAKE_BINARY_DIR}" "${CMAKE_HOME_DIRECTORY}"
+    )
+    target_link_libraries(test_helloworld
+        ${Boost_LIBRARIES}
+    )
+    set_target_properties(test_helloworld PROPERTIES
+        COMPILE_DEFINITIONS BOOST_TEST_DYN_LINK
+    )
+endif ()
 
 add_executable(test_g_helloworld tests/test_g_general_api.cpp general_api.cpp)
 target_include_directories(test_g_helloworld
     PRIVATE 
     "${CMAKE_BINARY_DIR}" "${CMAKE_HOME_DIRECTORY}"
+    "${GTEST_INCLUDE_DIR}"
 )
 target_link_libraries(test_g_helloworld
     ${GTEST_LIBRARIES}
     ${GTEST_MAIN_LIBRARIES}
     pthread
 )
-
+set_target_properties(test_g_helloworld PROPERTIES
+  CXX_STANDARD 14
+  CXX_STANDARD_REQUIRED ON
+)
 
 if (MSVC)
     target_compile_options(helloworld_cli PRIVATE
@@ -52,9 +55,11 @@ if (MSVC)
     target_compile_options(test_g_helloworld PRIVATE
         /W4
     )
-    target_compile_options(test_helloworld PRIVATE
-        /W4
-    )
+    if (Boost_FOUND)
+        target_compile_options(test_helloworld PRIVATE
+            /W4
+        )
+    endif ()
 else ()
     target_compile_options(helloworld_cli PRIVATE
         -Wall -Wextra -pedantic -Werror
@@ -62,9 +67,11 @@ else ()
     target_compile_options(test_g_helloworld PRIVATE
         -Wall -Wextra -pedantic -Werror
     )
-    target_compile_options(test_helloworld PRIVATE
-        -Wall -Wextra -pedantic -Werror
-    )
+    if (Boost_FOUND)
+        target_compile_options(test_helloworld PRIVATE
+            -Wall -Wextra -pedantic -Werror
+        )
+    endif ()
 endif()
 
 
@@ -82,5 +89,7 @@ include(CPack)
 
 enable_testing()
 
-add_test(test_api test_helloworld)
+if (Boost_FOUND)
+    add_test(test_api test_helloworld)
+endif ()
 add_test(test_g_api test_g_helloworld)
