@@ -14,6 +14,9 @@ find_package(GTest REQUIRED)
 
 configure_file(config.h.in config.h)
 
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 add_executable(helloworld_cli main.cpp general_api.cpp)
 target_include_directories(helloworld_cli
     PRIVATE "${CMAKE_BINARY_DIR}"
@@ -42,10 +45,6 @@ target_link_libraries(test_g_helloworld
     ${GTEST_LIBRARIES}
     ${GTEST_MAIN_LIBRARIES}
     pthread
-)
-set_target_properties(test_g_helloworld PROPERTIES
-  CXX_STANDARD 14
-  CXX_STANDARD_REQUIRED ON
 )
 
 if (MSVC)
