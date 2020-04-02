@@ -49,30 +49,18 @@ target_link_libraries(test_g_helloworld
 )
 
 if (MSVC)
-    target_compile_options(helloworld_cli PRIVATE
-        /W4
-    )
-    target_compile_options(test_g_helloworld PRIVATE
-        /W4
-    )
-    if (Boost_FOUND)
-        target_compile_options(test_helloworld PRIVATE
-            /W4
-        )
-    endif ()
+  set(WARNINGS_FLAGS /W4)
 else ()
-    target_compile_options(helloworld_cli PRIVATE
-        -Wall -Wextra -pedantic -Werror
-    )
-    target_compile_options(test_g_helloworld PRIVATE
-        -Wall -Wextra -pedantic -Werror
-    )
-    if (Boost_FOUND)
-        target_compile_options(test_helloworld PRIVATE
-            -Wall -Wextra -pedantic -Werror
-        )
-    endif ()
+  set(WARNINGS_FLAGS -Wall -Wextra -pedantic -Werror)
 endif()
+
+message ("Warnings: " "${WARNINGS_FLAGS}")
+
+target_compile_options(helloworld_cli PRIVATE ${WARNINGS_FLAGS})
+target_compile_options(test_g_helloworld PRIVATE ${WARNINGS_FLAGS})
+if (Boost_FOUND)
+  target_compile_options(test_helloworld PRIVATE ${WARNINGS_FLAGS})
+endif ()
 
 
 install(TARGETS helloworld_cli RUNTIME DESTINATION bin)
