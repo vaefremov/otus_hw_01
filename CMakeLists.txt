@@ -14,10 +14,7 @@ find_package(GTest REQUIRED)
 
 configure_file(config.h.in config.h)
 
-SET (CMAKE_CXX_FLAGS_INIT                "-Wall -std=c++14")
-
 add_executable(helloworld_cli main.cpp general_api.cpp)
-
 set_target_properties (helloworld_cli  PROPERTIES
   CXX_STANDARD 14
   CXX_STANDARD_REQUIRED ON
@@ -29,9 +26,9 @@ target_compile_options(helloworld_cli PRIVATE
     -Wall -Wextra -pedantic -Werror
 )
 
-add_executable(test_helloworld test_general_api.cpp general_api.cpp)
+add_executable(test_helloworld tests/test_general_api.cpp general_api.cpp)
 target_include_directories(test_helloworld
-    PRIVATE "${CMAKE_BINARY_DIR}"
+    PRIVATE "${CMAKE_BINARY_DIR}" "${CMAKE_HOME_DIRECTORY}"
 )
 target_compile_options(test_helloworld PRIVATE
     -Wall -Wextra -pedantic -Werror
@@ -43,9 +40,10 @@ set_target_properties(test_helloworld PROPERTIES
     COMPILE_DEFINITIONS BOOST_TEST_DYN_LINK
 )
 
-add_executable(test_g_helloworld test_g_general_api.cpp general_api.cpp)
+add_executable(test_g_helloworld tests/test_g_general_api.cpp general_api.cpp)
 target_include_directories(test_g_helloworld
-    PRIVATE "${CMAKE_BINARY_DIR}"
+    PRIVATE 
+    "${CMAKE_BINARY_DIR}" "${CMAKE_HOME_DIRECTORY}"
 )
 target_compile_options(test_g_helloworld PRIVATE
     -Wall -Wextra -pedantic -Werror
@@ -59,6 +57,29 @@ target_link_libraries(test_g_helloworld
     ${GTEST_MAIN_LIBRARIES}
     pthread
 )
+
+
+if (MSVC)
+    target_compile_options(helloworld_cli PRIVATE
+        /W4
+    )
+    target_compile_options(test_g_helloworld PRIVATE
+        /W4
+    )
+    target_compile_options(test_helloworld PRIVATE
+        /W4
+    )
+else ()
+    target_compile_options(helloworld_cli PRIVATE
+        -Wall -Wextra -pedantic -Werror
+    )
+    target_compile_options(test_g_helloworld PRIVATE
+        -Wall -Wextra -pedantic -Werror
+    )
+    target_compile_options(test_helloworld PRIVATE
+        -Wall -Wextra -pedantic -Werror
+    )
+endif()
 
 
 install(TARGETS helloworld_cli RUNTIME DESTINATION bin)
