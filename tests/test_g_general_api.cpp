@@ -1,6 +1,6 @@
 #include "general_api.h"
 #include <string>
-#include <iostream>
+#include <regex>
 
 #include <gtest/gtest.h>
 
@@ -25,7 +25,11 @@ TEST(general_api_tests, test_patch_valid)
     EXPECT_TRUE(patch > 0);
 }
 
-TEST_F(TestFixtureName, test_with_fixture)
+TEST(general_api_tests, test_version_str)
 {
-    std::cout << message << std::endl;
+    auto str = OTUS_HW::version_str();
+    std::regex re("^Version: \\d+\\.\\d+\\.\\d+$");
+    std::smatch m;
+    bool res = std::regex_match(str, m, re);
+    EXPECT_TRUE(res);
 }
