@@ -1,6 +1,8 @@
 #include "general_api.h"
 #include "config.h"
 
+// Add comment
+
 int OTUS_HW::version_patch()
 {
     return PROJECT_VERSION_PATCH;
